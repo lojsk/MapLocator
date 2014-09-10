@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="MapData" representedClassName="MapData" syncable="YES">
+        <attribute name="from_to" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="msg" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="mapPoint" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PointData" inverseName="pointMap" inverseEntity="PointData" syncable="YES"/>
+        <relationship name="mapUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserData" inverseName="userMap" inverseEntity="UserData" syncable="YES"/>
+    </entity>
+    <entity name="PointData" representedClassName="PointData" syncable="YES">
+        <attribute name="lat" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="lng" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="street" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="pointMap" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MapData" inverseName="mapPoint" inverseEntity="MapData" syncable="YES"/>
+    </entity>
+    <entity name="UserData" representedClassName="UserData" syncable="YES">
+        <attribute name="color" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="last_timestamp" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <relationship name="userMap" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MapData" inverseName="mapUser" inverseEntity="MapData" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="MapData" positionX="-227" positionY="89" width="128" height="135"/>
+        <element name="PointData" positionX="27" positionY="-9" width="128" height="103"/>
+        <element name="UserData" positionX="-470" positionY="-18" width="128" height="135"/>
+    </elements>
+</model>

@@ -7,20 +7,45 @@
 //
 
 #import "AppDelegate.h"
+#import "RIOInterface.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-        UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-        splitViewController.delegate = (id)navigationController.topViewController;
-    }
+    
+    [Parse setApplicationId:@"2yaClJju4q5UosYHLjRbkFWxa9N7zhmGM9KLAwza"
+                  clientKey:@"IEu4DTVe5kOWjZ5UwI6m9CTugu2tFv97Pq4j2bVA"];
+    
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+    // Register for push notifications
+    [application registerForRemoteNotificationTypes:
+     UIRemoteNotificationTypeBadge |
+     UIRemoteNotificationTypeAlert |
+     UIRemoteNotificationTypeSound];
+    
+    
+    RIOInterface *rioRef = [RIOInterface sharedInstance];
+	[rioRef setSampleRate:44100];
+	[rioRef setFrequency:294];
+	[rioRef initializeAudioSession];
+    
     return YES;
 }
-							
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
+    // Store the deviceToken in the current installation and save it to Parse.
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:newDeviceToken];
+    currentInstallation.channels = @[@"global"];
+    [currentInstallation saveInBackground];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [PFPush handlePush:userInfo];
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
