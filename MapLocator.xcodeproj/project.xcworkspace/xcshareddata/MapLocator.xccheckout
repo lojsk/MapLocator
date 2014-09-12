@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>CC4C49D1-93CD-41E7-9ABD-E8B72D7B8D55</string>
+	<key>IDESourceControlProjectName</key>
+	<string>MapLocator</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>56D4F4AD349B0734D24E351BE6F26F167BD4D677</key>
+		<string>https://github.com/irtemed88/PitchDetector.git</string>
+		<key>E5DD549AFA872A5FF003E8AE92CC2DD8AB64C7BD</key>
+		<string>https://github.com/lojsk/MapLocator.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>MapLocator.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>56D4F4AD349B0734D24E351BE6F26F167BD4D677</key>
+		<string>../../../PitchDetector</string>
+		<key>E5DD549AFA872A5FF003E8AE92CC2DD8AB64C7BD</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/lojsk/MapLocator.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>E5DD549AFA872A5FF003E8AE92CC2DD8AB64C7BD</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E5DD549AFA872A5FF003E8AE92CC2DD8AB64C7BD</string>
+			<key>IDESourceControlWCCName</key>
+			<string>MapLocator</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>56D4F4AD349B0734D24E351BE6F26F167BD4D677</string>
+			<key>IDESourceControlWCCName</key>
+			<string>PitchDetector</string>
+		</dict>
+	</array>
+</dict>
+</plist>

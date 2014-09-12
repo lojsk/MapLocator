@@ -22,6 +22,7 @@
 #import "AutocompleteTable.h"
 #import "MessageTable.h"
 
+
 @interface MapViewController : UIViewController<MKMapViewDelegate, UIGestureRecognizerDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, CLLocationManagerDelegate, UIScrollViewDelegate> {
     MKAnnotationView *lastPin;
     MKAnnotationView *selectedPin;
@@ -44,6 +45,8 @@
     
     AutocompleteTable *autoTable;
     MessageTable *messageTable;
+    
+    CAGradientLayer *maskLayer;
 }
 @property (weak, nonatomic) IBOutlet MKMapView *myMapView;
 @property (weak, nonatomic) IBOutlet UIView *myPinView;

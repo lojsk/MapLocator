@@ -147,6 +147,14 @@
     [locationManager startUpdatingLocation];
 }
 
+/*- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    maskLayer.position = CGPointMake(0, scrollView.contentOffset.y);
+    [CATransaction commit];
+}*/
+
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
    // if(!is_not_first)
        // [self setCurrentPosition];
@@ -274,8 +282,8 @@
     // open message
     if(view.annotation != myMapView.userLocation) {
         CustomAnnotation *annotation = view.annotation;
-        if([annotation.pinID intValue] != -1)
-            [self openMessageView:[spotHist objectAtIndex:[annotation.pinID intValue]]];
+        //if([annotation.pinID intValue] != -1)
+           // [self openMessageView:[spotHist objectAtIndex:[annotation.pinID intValue]]];
     }
 }
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
@@ -411,36 +419,13 @@
 -(void)loadMyLocalMapFrom {
     NSLog(@"count after: %d", [[MapData MR_findAll] count]);
     
-    spotHist = [UserData MR_findAllSortedBy:@"last_timestamp" ascending:NO];
+    spotHist = [MapData MR_findAllSortedBy:@"timestamp" ascending:NO];
     [myHistTable reloadData];
     
-    
-    
-    NSMutableArray *maps = [[NSMutableArray alloc] init];
-    int i = 0;
-    for(UserData *user in spotHist) {
-        NSSortDescriptor *nameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO];
-        NSArray *sorted = [user.userMap sortedArrayUsingDescriptors:[NSArray arrayWithObject:nameDescriptor]];
-        MapData *map = [sorted objectAtIndex:0];
-        for(PointData *point in map.mapPoint) {
-            CLLocationCoordinate2D coor = CLLocationCoordinate2DMake([point.lat doubleValue], [point.lng doubleValue]);
-            UIImage *img = [self imageWithView:myPinView withColor:[UIColor colorWithCSS:user.color] andText:user.name];
-            
-            CustomAnnotation *pin = [[CustomAnnotation alloc] initWithCoordinates:coor placeName:point.street image:img andID:i];
-            [myMapView addAnnotation:pin];
-        }
-        if(i < 4)
-            [maps addObject:map];
-        i++;
-    }
-    
-    [self getRegionParameters:maps];
+  //  [self getRegionParameters:maps];
 
 }
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
-}
 
 -(void)loadMyMap {
     lastTimestamp = 0.0f;
@@ -621,7 +606,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 70.0f;
+    return 60.0f;
 }
 
 // add data to cell
@@ -634,17 +619,17 @@
                                                reuseIdentifier:cellIdentifier];
     }
     
-    UserData *user = [spotHist objectAtIndex:indexPath.row];
+    MapData *map = [spotHist objectAtIndex:indexPath.row];
+    UserData *user = map.mapUser;
     // Initialization code
-    cell.myLogoView.layer.cornerRadius = 30;
+    cell.myLogoView.layer.cornerRadius = 25;
     cell.myLogoView.layer.masksToBounds = YES;
     
     cell.myLogoView.backgroundColor = [UIColor colorWithCSS:user.color];
     cell.myLogoLabel.text = user.name;
     cell.nameLabel.text = user.name;
-    for(MapData *map in user.userMap) {
-        cell.subLabel.text = map.msg; // need sort metod to get last one
-    }
+    
+    cell.subLabel.text = map.msg; // need sort metod to get last one
     
     return cell;
 }
@@ -652,14 +637,12 @@
 // deselect row
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    // open message
-    [self openMessageView:[spotHist objectAtIndex:indexPath.row]];
+    [self addPinToMap:[spotHist objectAtIndex:indexPath.row]];
    // [self.revealViewController rightRevealToggle:nil];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    [cell setBackgroundColor:[UIColor colorWithWhite:1.0f alpha:0.0f]];
+  // [cell setBackgroundColor:[UIColor colorWithWhite:1.0f alpha:0.0f]];
 }
 
 - (IBAction)closeMessageView:(id)sender {
@@ -670,50 +653,13 @@
     [myMessageTable setHidden:YES];
 }
 
--(void)openMessageView:(UserData*)theUser {
-    [myMapView removeAnnotations:[myMapView annotations]];
+-(void)addPinToMap:(MapData*)theMap {
+    theMap.mapPoint
     
-    NSMutableArray *maps = [[NSMutableArray alloc] init];
-    int i = 1;
-    NSSortDescriptor *nameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO];
-    NSArray *sorted = [theUser.userMap sortedArrayUsingDescriptors:[NSArray arrayWithObject:nameDescriptor]];
-    for(MapData *map in sorted) {
-        [maps addObject:map];
-        
-        NSString *color;
-        if([map.from_to intValue] == 0)
-            color = theUser.color;
-        else
-            color = [[NSUserDefaults standardUserDefaults] objectForKey:@"color"];
-        
-        int j = 0;
-        BOOL morePins = NO;
-        if([map.mapPoint count] > 1)
-            morePins = YES;
-        for(PointData *point in map.mapPoint) {
-            NSString *text = [NSString stringWithFormat:@"%d", i];
-            if(morePins)
-                text = [NSString stringWithFormat:@"%d%@", i, [NSString stringWithFormat:@"%c", 97+j]];
-            
-            CLLocationCoordinate2D coor = CLLocationCoordinate2DMake([point.lat doubleValue], [point.lng doubleValue]);
-            UIImage *img = [self imageWithView:myPinView withColor:[UIColor colorWithCSS:color] andText:text];
-            
-            CustomAnnotation *pin = [[CustomAnnotation alloc] initWithCoordinates:coor placeName:point.street image:img andID:-1];
-            [myMapView addAnnotation:pin];
-            j++;
-        }
-        i++;
-    }
-    
-    [self getRegionParameters:maps];
-    
-    messageUserLabel.text = theUser.name;
-    
-    messageTable.messageColor = [UIColor colorWithCSS:theUser.color];
-    messageTable.messageData = maps;
-    [myMessageTable reloadData];
-    [messageHeader setHidden:NO];
-    [myMessageTable setHidden:NO];
+    MKPointAnnotation *pa = [[MKPointAnnotation alloc] init];
+    pa.coordinate = theMap;
+    pa.title = [self addressLocationWithLat:touchMapCoordinate.latitude andLng:touchMapCoordinate.longitude];
+    [myMapView addAnnotation:pa];
 }
 
 -(void)openChirpView:(NSString*)theChirpCode {
